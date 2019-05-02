@@ -5,4 +5,4 @@ class SocialAppConfig(AppConfig):
     name = 'social_app'
 
     def ready(self):
-        import social_app.signals
+        import team_builder.social_app.signals
