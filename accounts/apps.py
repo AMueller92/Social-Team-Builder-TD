@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class SocialAppConfig(AppConfig):
-    name = 'social_app'
+    name = 'accounts'
 
     def ready(self):
-        import team_builder.social_app.signals
+        import team_builder.accounts.signals
