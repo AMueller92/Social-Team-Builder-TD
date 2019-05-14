@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Timestampable(models.Model):
@@ -32,18 +33,19 @@ class Skill(models.Model):
         (PHP, 'Php'),
         (RUBY, 'Ruby'),
     )
-    name = models.CharField(max_length=50, choices=SKILL_CHOICES, default="")
+    name = models.CharField(max_length=50, choices=SKILL_CHOICES, default="", blank=True)
 
     def __str__(self):
-        return f"Skill: {self.name}"
+        return self.get_name_display()
 
 
 class Profile(Timestampable, models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, blank=True, default="")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50, blank=True, default='')
+    last_name = models.CharField(max_length=50, blank=True, default='')
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     description = models.CharField(max_length=600, blank=True, default="")
-    skills = models.ManyToManyField(Skill)
+    skills = models.ManyToManyField(Skill, blank=True)
 
     def __str__(self):
-        return f"Profile of {self.user}"
+        return f"Profile of {self.user} PK: {self.pk}"

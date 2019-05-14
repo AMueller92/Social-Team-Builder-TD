@@ -23,7 +23,9 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
-    path('account/', include('accounts.urls', namespace='accounts')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('accounts/', include("django.contrib.auth.urls")),
+    path('projects/', include('projects.urls', namespace='projects')),
 ]
 
 

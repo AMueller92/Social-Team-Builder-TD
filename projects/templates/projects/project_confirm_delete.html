@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<form class="grid-45 centered" method="post">
+    {% csrf_token %}
+    <h2 class="grid-45 centered">Attention!</h2>
+    <p>Are you sure you want to delete "{{ object.title }}"?</p>
+    <button type="submit" class="button button-primary">Yes</button>
+    <a class="button button-secondary" href="{% url 'projects:project_detail' pk=object.pk %}">No</a>
+</form>
+{% endblock %}

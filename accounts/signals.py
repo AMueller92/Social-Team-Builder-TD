@@ -6,6 +6,10 @@ from django.dispatch import receiver
 from .models import Profile
 
 
+# Creates a user profile when the user signs up to the page
+# and provides a default avatar
+
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwarks):
     if created:

@@ -16,12 +16,12 @@
         <h2>Profile</h2>
       </div>
       <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="profile_edit.html">Edit</a>
+        <a class="button icon-on-left" href="{% url 'accounts:edit_profile' %}">Edit</a>
       </div>
     </div>
 
     <div class="grid-70">
-      <h1>{{ object.name }}</h1>
+      <h1>{{ object.first_name }} {{ object.last_name }}</h1>
       <div class="circle--article--body">
         <p>{{ object.description }}</p>
       </div>
@@ -59,7 +59,7 @@
 
       <div class="circle--secondary--module">
         <div class="circle--primary--avatar">
-          <img src="{{ profile.image.url }}">
+          <img src="{{ object.image.url }}" width="100%">
         </div>
       </div>
 

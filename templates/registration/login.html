@@ -3,12 +3,12 @@
 {% block content %}
   <div class="bounds">
     <div class="grid-30 centered">
-      <h2>Sign Up</h2>
-      <form method="POST">
+      <h2>Login</h2>
+      <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="button-primary" type="submit">Sign Up</button>
-        <a class="button" href="{% url 'login' %}">Login</a>
+        <button class="button-primary" type="submit">Login</button>
+        <a class="button" href="signup.html">Sign Up</a>
       </form>
     </div>
   </div>

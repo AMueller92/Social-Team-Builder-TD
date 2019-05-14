@@ -1,50 +1,75 @@
-{% extends 'social_app/layout.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
-  <div class="circle--actions--bar">
-    <div class="bounds">
-      <div class="grid-100">
-        <a class="button button-primary" href="project.html">Save Project</a>
-        <a class="button button-text" href="index.html">Discard</a>
+  <form action="{% url 'projects:new_project' %}" method="POST">
+    {% csrf_token %}
+    <div class="circle--actions--bar">
+      <div class="bounds">
+        <div class="grid-100">
+          <a class="button button-text" href="index.html">Discard</a>
+          <button type="submit" class="button button-primary icon-on-left">Save Project</button>
+        </div>
       </div>
     </div>
-  </div>
+    
+    <div class="bounds circle--page circle--article">
+      <div class="grid-70">
+        <div class="circle--article--body">
+          <h2>Project Title</h2>
+          {{ form.title.errors }}
+          {{ form.title }}
+          <h2>Description</h2>
+          {{ form.description.errors }}
+          {{ form.description }}
+        </div>
 
-  <div class="bounds circle--page circle--article">
-    <div class="grid-70">
-      <div class="circle--article--body">
-        <input type="text" class="circle--input--h1" placeholder="Project Title" />
-        <textarea placeholder="Project description..."></textarea>
+        <div class="circle--project--positions">
+          <h2>Positions</h2>
+
+          <ul class="circle--group--list circle--clone--list">
+            {{ formset.management_form }}
+            {% for form in formset %}
+            <li class="formset">
+              {{ form.name.errors }}
+              {{ form.name }}
+              {{ form.description.errors }}
+              {{ form.description }}
+              {% for skill in form.skills %}
+                {{ skill }}
+              {% endfor %}
+            </li>
+            {% endfor %}
+          </ul>
+          <button type="submit" class="button button-primary icon-on-left">Save Project</button>
+
+        </div>
       </div>
 
-      <div class="circle--project--positions">
-        <h2>Positions</h2>
+      <div class="grid-25 grid-push-5">
 
-        <ul class="circle--group--list circle--clone--list">
-          <li>
-            <input type="text" class="circle--input--h3" placeholder="Position Title" />
-            <textarea placeholder="Position description..."></textarea>
-            <a class="circle--clone--add">Add Position</a>
-            <a class="circle--clone--remove">Remove</a>
-          </li>
-        </ul>
-        <a class="button button-primary" href="project.html">Save Project</a>
+        <div class="circle--secondary--module">
+          <h3>Project Timeline</h3>
+          {{ form.duration }}
+        </div>
+
+        <div class="circle--secondary--module">
+          <h3>Applicant Requirements</h3>
+          {{ form.requirements }}
+        </div>
 
       </div>
     </div>
-
-    <div class="grid-25 grid-push-5">
-
-      <div class="circle--secondary--module">
-        <h3>Project Timeline</h3>
-        <textarea placeholder="Time estimate" class="circle--textarea--input"></textarea>
-      </div>
-
-      <div class="circle--secondary--module">
-        <h3>Applicant Requirements</h3>
-        <textarea></textarea>
-      </div>
-
-    </div>
-  </div>
+  </form>
 {% endblock %}
+
+{% block js %}
+    {% load static from staticfiles %}
+    {{ form.media.js }}
+    <script src="{% static 'social_app/js/jquery.formset.js' %}"></script>
+    <script>
+        $('.formset').formset({
+            addText: 'Add position',
+            deleteText: 'Remove'
+        });
+    </script>
+{% endblock js %}
