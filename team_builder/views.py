@@ -1,8 +1,7 @@
-#from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
 from django.views.generic import ListView
 
-from projects.models import Project
+from projects.models import Project, Position
 
 
 class IndexView(ListView):

@@ -40,7 +40,7 @@ class Position(models.Model):
     description = models.CharField(max_length=500)
 
     def __str__(self):
-        return f"Position: {self.name}"
+        return self.name
 
 
 class Notification(Timestampable, models.Model):
@@ -67,7 +67,7 @@ class Application(Timestampable, models.Model):
         ('R', 'Rejected'),
     )
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.ForeignKey(Position, on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='applications')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
 
     class Meta:

@@ -23,9 +23,12 @@
       </div>
 
       <div class="grid-70">
+        <p>First Name:</p>
         {{ profile_form.first_name}}
+        <p>Last Name:</p>
         {{ profile_form.last_name}}
         <div class="circle--article--body">
+          <p>Description:</p>
           {{ profile_form.description }}
         </div>
 
@@ -70,11 +73,16 @@
         <div class="circle--secondary--module">
           <h4>My Skills</h4>
           <ul class="circle--clone--list">
-            <li>
-              <input type="text" placeholder="Skill" />
-              <a class="circle--clone--add">Add Skill</a>
-              <a class="circle--clone--remove">Remove</a>
+            {% for skill in profile_form.skills %}
+            {{ skill }}
+            {% endfor %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+            <li class="skill-formset">
+              {{ form.id }}
+              {{ form.name }}
             </li>
+            {% endfor %}
           </ul>
         </div>
 
@@ -94,3 +102,15 @@
     </div>
   </form>
 {% endblock %}
+
+{% block js %}
+    {% load static from staticfiles %}
+    {{ form.media.js }}
+    <script src="{% static 'social_app/js/jquery.formset.js' %}"></script>
+    <script>
+        $('.skill-formset').formset({
+            addText: 'Add skill',
+            deleteText: 'Remove'
+        });
+    </script>
+{% endblock js %}

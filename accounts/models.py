@@ -49,3 +49,19 @@ class Profile(Timestampable, models.Model):
 
     def __str__(self):
         return f"Profile of {self.user} PK: {self.pk}"
+
+
+class SelfChoosenSkill(models.Model):
+    name = models.CharField(max_length=40, blank=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class UserProjects(models.Model):
+    title = models.CharField(max_length=50)
+    url = models.URLField()
+
+    def __str__(self):
+        return self.title

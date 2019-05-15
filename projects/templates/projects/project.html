@@ -4,8 +4,10 @@
   <div class="circle--actions--bar">
     <div class="bounds">
       <div class="grid-100">
-        <a class="button" href="{% url 'projects:edit_project' pk=object.pk %}">Edit Project</a>
-        <a class="button button-text" href="{% url 'projects:delete_project' pk=object.pk %}">Delete Project</a>
+        {% if request.user == object.user %}
+          <a class="button" href="{% url 'projects:edit_project' pk=object.pk %}">Edit Project</a>
+          <a class="button button-text" href="{% url 'projects:delete_project' pk=object.pk %}">Delete Project</a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -25,16 +27,33 @@
       <div class="circle--project--positions">
         <h2>Positions</h2>
         <ul class="circle--group--list">
-          {% for position in object.positions.all %}
+          {% if not positions %}
+          <li>There are no open positions right now...</li>
+          {% else %}
+          {% for position in positions %}
           <li>
             <h3>{{ position.name }}</h3>
             <p>{{  position.description }}</p>
-            <a class="button button-primary">Apply</a>
+            <h3>Desired Skill:</h3>
+            <tbody>
+              <td class="circle--cell">
+                {% for skill in position.skills.all %}
+                <span>{{ skill|join:", " }}</span>
+                {% endfor %}
+              </td>
+            </tbody><br>
+            {% if request.user != object.user %}
+              {% if position in applied %}
+                <button disabled class="button button-inactive">Already Applied</button>
+              {% else %}
+              <a class="button button-primary" href="{% url 'projects:apply' position_pk=position.id %}">Apply</a>
+              {% endif %}
+            {% endif %}
           </li>
           {% endfor %}
+          {% endif %}
         </ul>
       </div>
-
     </div>
 
     <div class="grid-25 grid-push-5">

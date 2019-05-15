@@ -18,6 +18,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+import notifications.urls
+
 from . import views
 
 urlpatterns = [
@@ -26,6 +28,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('accounts/', include("django.contrib.auth.urls")),
     path('projects/', include('projects.urls', namespace='projects')),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
 
 

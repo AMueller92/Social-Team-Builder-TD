@@ -4,8 +4,8 @@
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
-        <li><a class="selected" href="applications.html">Applications</a></li>
-        <li><a href="profile.html">Profile</a></li>
+        <li><a class="selected" href="{% url 'projects:applications' %}">Applications</a></li>
+        <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
       </ul>
     </nav>
   </div>
@@ -15,7 +15,7 @@
       <h2>Applications</h2>
     </div>
 
-    <div class="grid-25">
+    <div class="grid-20">
       <div class="circle--filter circle--secondary--module">
         <h4>Status</h4>
         <ul class="circle--filter--list">
@@ -52,33 +52,36 @@
 
     </div>
 
-    <div class="grid-70 grid-push-5">
+    <div class="grid-80 grid-push-5">
       <table class="u-full-width circle--table">
         <thead>
           <tr>
             <th>Applicant</th>
             <th class="circle--cell--right">Applicant Position</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
+          {% for application in applications %}
           <tr class="clickable-row" data-href="profile.html">
             <td>
-              <h3>Jim Horton</h3>
-              <p>Currency Calculator</p>
+              <h3>{{ application.applicant }}</h3>
+              <p>{{ application.position.project.title }}</p>
             </td>
             <td class="circle--cell--right">
-              <span class="secondary-label">Rails Developer</span>
+              <span class="secondary-label">{{ application.position.name }}</span>
             </td>
-          </tr>
-          <tr class="clickable-row" data-href="profile.html">
             <td>
-              <h3>Jenny McMann</h3>
-              <p>Currency Calculator</p>
+              {% if application.status == 'P' %}
+              <a class="button button-primary" href="{% url 'projects:app_status' application_pk=application.pk status='accepted' %}">Accept</a>
+              <a class="button button-secondary" href="{% url 'projects:app_status' application_pk=application.pk status='rejected' %}">Reject</a>
+              {% elif application.status == 'A' %}
+              <p>You accepted {{ application.applicant }}</p>
+              {% elif application.status == 'R' %}
+              <p>You rejected {{ application.applicant }}</p>
+              {% endif %}
             </td>
-            <td class="circle--cell--right">
-              <span class="secondary-label">Designer</span>
-            </td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
 

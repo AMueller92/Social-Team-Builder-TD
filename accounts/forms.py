@@ -2,7 +2,7 @@ from django import forms
 from django.forms.widgets import Textarea, TextInput
 from django.contrib.auth.models import User
 
-from .models import Profile
+from .models import Profile, Skill, SelfChoosenSkill
 
 
 class UserEditForm(forms.ModelForm):
@@ -13,6 +13,10 @@ class UserEditForm(forms.ModelForm):
 
 
 class ProfileEditForm(forms.ModelForm):
+    skills = forms.ModelMultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
+        queryset=Skill.objects.all()
+    )
 
     class Meta:
         model = Profile
@@ -34,3 +38,9 @@ class ProfileEditForm(forms.ModelForm):
             attrs={'class': 'form-control', 'placeholder': 'Enter your last name here'}
             ),
         }
+
+
+SkillFormSet = forms.modelformset_factory(SelfChoosenSkill,
+                                          fields=('name',),
+                                          extra=1,
+                                          min_num=0)

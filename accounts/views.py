@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from .models import Profile
-from .forms import ProfileEditForm
+from .models import Profile, Skill, SelfChoosenSkill
+from .forms import ProfileEditForm, SkillFormSet
+from projects.models import Project
 
 
 def register(request):
@@ -29,11 +30,11 @@ def register(request):
 
 def user_profile(request):
     profile = request.user.profile
-    skills = profile.skills.all()
+    projects = Project.objects.filter(user=request.user)
     return render(
         request,
         'accounts/profile.html',
-        {'object': profile, 'skills': skills}
+        {'object': profile, 'projects': projects}
     )
 
 
@@ -42,19 +43,31 @@ def edit_profile(request):
     if request.method == 'POST':
         profile_form = ProfileEditForm(request.POST, request.FILES,
                                        instance=request.user.profile)
+        formset = SkillFormSet(request.POST,
+                               queryset=SelfChoosenSkill.objects.filter(profile=request.user.profile))
+
         if profile_form.is_valid():
-            profile_form.save()
-            messages.success(
-                request,
-                "You edited your profile!"
-            )
-            return HttpResponseRedirect(reverse('accounts:profile'))
+            profile = profile_form.save()
+            if formset.is_valid():
+                SelfChoosenSkill.objects.filter(profile=profile).delete()
+                skills = formset.save(commit=False)
+                for skill in skills:
+                    skill.profile = profile
+                    skill.save()
+                messages.success(
+                    request,
+                    "You edited your profile!"
+                )
+                return HttpResponseRedirect(reverse('accounts:profile'))
+
     else:
         profile_form = ProfileEditForm(instance=request.user.profile)
+        formset = SkillFormSet(queryset=SelfChoosenSkill.objects.filter(profile=request.user.profile))
 
     context = {
         'profile_form': profile_form,
-        'object': profile
+        'formset': formset,
+        'object': profile,
     }
 
     return render(request, 'accounts/profile_edit.html', context)
