@@ -22,15 +22,20 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
-# TODO später benutzt um alle profile anzuzeigen
-#class ProfileDetailView(DetailView):
-#    model = Profile
-#    template_name = 'accounts/profile.html'
-
 
 def user_profile(request):
     profile = request.user.profile
     projects = Project.objects.filter(user=request.user)
+    return render(
+        request,
+        'accounts/profile.html',
+        {'object': profile, 'projects': projects}
+    )
+
+
+def any_user_profile(request, pk):
+    profile = Profile.objects.get(id=pk)
+    projects = Project.objects.filter(user=profile.user)
     return render(
         request,
         'accounts/profile.html',

@@ -19,16 +19,17 @@
     <div class="grid-25">
       <div class="circle--filter circle--secondary--module">
         <h4>Project Needs</h4>
-        <ul class="circle--filter--list">
-          <li><a class="selected">All Needs</a></li>
-          <li><a>Android Developer</a></li>
-          <li><a>Designer</a></li>
-          <li><a>Java Developer</a></li>
-          <li><a>PHP Developer</a></li>
-          <li><a>Python Developer</a></li>
-          <li><a>Rails Developer</a></li>
-          <li><a>WordPress Developer</a></li>
-          <li><a>iOS Developer</a></li>
+        <ul class="circle--filter--list already-set">
+          <li><a href="{% url 'home' %}">All Needs</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='AN' %}">Android Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='DES' %}">Designer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='JV' %}">Java Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='JS' %}">JavaScript Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='PHP' %}">PHP Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='PY' %}">Python Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='RU' %}">Rails Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='WP' %}">WordPress Developer</a></li>
+          <li><a href="{% url 'projects:skill_search' skill='IOS' %}">iOS Developer</a></li>
         </ul>
       </div>
     </div>

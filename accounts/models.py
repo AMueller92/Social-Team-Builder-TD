@@ -26,12 +26,20 @@ class Skill(models.Model):
     JAVASCRIPT = 'JS'
     PHP = 'PHP'
     RUBY = 'RU'
+    DESIGNER = 'DES'
+    ANDROID = 'AN'
+    WORDPRESS = 'WP'
+    IOS = 'IOS'
     SKILL_CHOICES = (
         (PYTHON, 'Python'),
         (JAVA, 'Java'),
         (JAVASCRIPT, 'JavaScript'),
         (PHP, 'Php'),
         (RUBY, 'Ruby'),
+        (DESIGNER, 'Designer'),
+        (ANDROID, 'Android'),
+        (WORDPRESS, 'WordPress'),
+        (IOS, 'iOS'),
     )
     name = models.CharField(max_length=50, choices=SKILL_CHOICES, default="", blank=True)
 

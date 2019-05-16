@@ -162,7 +162,7 @@ def application_status_view(request, application_pk, status):
         notify.send(
             request.user,
             recipient=application.applicant,
-            verb=f"You got rejected for the Position: {application.position}"
+            verb=f"You got rejected for the Position: {application.position} of Project: {application.position.project}"
         )
         notify.send(
             request.user,
@@ -170,7 +170,7 @@ def application_status_view(request, application_pk, status):
             verb=f"You rejected {application.applicant} for the Position: {application.position}"
         )
     
-    return HttpResponseRedirect(reverse('home'))
+    return HttpResponseRedirect(reverse('projects:applications'))
 
 
 def search(request):
@@ -181,3 +181,7 @@ def search(request):
     )
     return render(request, "projects/index.html", {'projects': projects})
 
+
+def skill_search(request, skill):
+    projects = Project.objects.filter(positions__skills__name=skill)
+    return render(request, "projects/index.html", {'projects': projects})

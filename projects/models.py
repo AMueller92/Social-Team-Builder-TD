@@ -22,14 +22,14 @@ class Timestampable(models.Model):
 
 
 class Project(Timestampable, models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=150)
     description = models.CharField(max_length=600)
     duration = models.IntegerField()
     requirements = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"Project: {self.title}"
+        return self.title
 
 
 class Position(models.Model):

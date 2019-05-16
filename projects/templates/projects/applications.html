@@ -53,6 +53,7 @@
     </div>
 
     <div class="grid-80 grid-push-5">
+      {% if applications %}
       <table class="u-full-width circle--table">
         <thead>
           <tr>
@@ -63,7 +64,7 @@
         </thead>
         <tbody>
           {% for application in applications %}
-          <tr class="clickable-row" data-href="profile.html">
+          <tr class="clickable-row" data-href="{% url 'accounts:any_profile' pk=application.applicant.profile.id %}">
             <td>
               <h3>{{ application.applicant }}</h3>
               <p>{{ application.position.project.title }}</p>
@@ -81,10 +82,13 @@
               <p>You rejected {{ application.applicant }}</p>
               {% endif %}
             </td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
-
+    {% else %}
+    <p>No applications yet...</p>
+    {% endif %}
     </div>
 
   </div>
