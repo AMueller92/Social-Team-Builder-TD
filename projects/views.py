@@ -20,6 +20,7 @@ class ProjectDetailView(DetailView):
             project=context['object']).exclude(applications__status='A')
         context['applied'] = Position.objects.filter(project=context['object'],
                                                      applications__applicant=self.request.user)
+        context['applications'] = Application.objects.filter(position__project=context['object'])
         return context
 
 
@@ -189,18 +190,3 @@ def application_status_view(request, application_pk, status):
         )
     
     return HttpResponseRedirect(reverse('projects:applications'))
-
-
-def search(request):
-    search_term = request.GET.get('search_box', None)
-    projects = Project.objects.filter(
-        Q(title__icontains=search_term) |
-        Q(description__icontains=search_term) |
-        Q(positions__name__icontains=search_term)
-    )
-    return render(request, "projects/index.html", {'projects': projects})
-
-
-def skill_search(request, skill):
-    projects = Project.objects.filter(positions__skills__name=skill)
-    return render(request, "projects/index.html", {'projects': projects})

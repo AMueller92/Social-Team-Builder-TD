@@ -28,6 +28,10 @@ class Project(Timestampable, models.Model):
     duration = models.IntegerField()
     requirements = models.CharField(max_length=255)
 
+    @property
+    def available_positions(self):
+        return self.positions.exclude(applications__status='A')
+
     def __str__(self):
         return self.title
 

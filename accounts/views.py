@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
@@ -26,10 +27,14 @@ def register(request):
 def user_profile(request):
     profile = request.user.profile
     projects = Project.objects.filter(user=request.user)
+    attempted_projects = Project.objects.filter(
+        positions__applications__applicant=request.user).exclude(
+            positions__applications__status='P').exclude(
+                positions__applications__status='R')
     return render(
         request,
         'accounts/profile.html',
-        {'object': profile, 'projects': projects}
+        {'object': profile, 'projects': projects, 'attempted_projects': attempted_projects}
     )
 
 

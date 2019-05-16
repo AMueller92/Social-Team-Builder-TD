@@ -29,7 +29,7 @@
         <p>{{ object.description }}</p>
       </div>
 
-      <h2>Past Projects</h2>
+      <h2>Own Projects</h2>
       <table class="u-full-width circle--table">
         <thead>
           <tr>
@@ -47,6 +47,23 @@
               {% for position in project.positions.all %}
               <span class="secondary-label">{{ position.name }}</span>
               {% endfor %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h2>Attempted Projects</h2>
+      <table class="u-full-width circle--table">
+        <thead>
+          <tr>
+            <th>Project Title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for project in attempted_projects %}
+          <tr class="clickable-row" data-href="{% url 'projects:project_detail' pk=project.pk %}">
+            <td>
+              <h3>{{ project.title }}</h3>
             </td>
           </tr>
           {% endfor %}

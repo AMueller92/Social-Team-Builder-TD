@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+  {% if user.is_authenticated %}
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
@@ -21,16 +22,11 @@
         <h4>Project Needs</h4>
         <ul class="circle--filter--list already-set">
           <li><a href="{% url 'home' %}">All Needs</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='AN' %}">Android Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='DES' %}">Designer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='JV' %}">Java Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='JS' %}">JavaScript Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='PHP' %}">PHP Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='PY' %}">Python Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='RU' %}">Rails Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='WP' %}">WordPress Developer</a></li>
-          <li><a href="{% url 'projects:skill_search' skill='IOS' %}">iOS Developer</a></li>
+          {% for position in positions %}
+          <li><a href="?position={{ position.name }}">{{ position.name }}</a></li>
+          {% endfor %}
         </ul>
+        <a href="?skill=userskill">Match my Skillset</a>
       </div>
     </div>
 
@@ -49,9 +45,11 @@
               <h3>{{ project.title }}</h3>
             </td>
             <td class="circle--cell--right">
-              {% for position in project.positions.all %}
-              <span class="secondary-label">{{ position.name }}</span>
-              {% endfor %}
+              {% if project.available_positions %}
+              <span class="secondary-label">{{ project.available_positions|join:", " }}</span>
+              {% else %}
+              <p>No open positions...</p>
+              {% endif %}
             </td>
           </tr>
           {% endfor %}
@@ -59,4 +57,7 @@
       </table>
     </div>
   </div>
+  {% else %}
+  <h2 class="newuser">Please login or signup to use the features of this site</h2>
+  {% endif %}
 {% endblock %}
