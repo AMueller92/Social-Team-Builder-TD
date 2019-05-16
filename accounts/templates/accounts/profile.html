@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+  {% if request.user == object.user  %}
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
@@ -9,17 +10,19 @@
       </ul>
     </nav>
   </div>
-
+  {% endif %}
   <div class="bounds circle--page">
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--primary">
         <h2>Profile</h2>
       </div>
-      <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="{% url 'accounts:edit_profile' %}">Edit</a>
-      </div>
+    {% if request.user == object.user  %}  
+    <div class="circle--fluid--cell circle--fluid--secondary">
+      <a class="button icon-on-left" href="{% url 'accounts:edit_profile' %}">Edit</a>
     </div>
-
+    {% endif %}
+  </div>
+  
     <div class="grid-70">
       <h1>{{ object.first_name }} {{ object.last_name }}</h1>
       <div class="circle--article--body">

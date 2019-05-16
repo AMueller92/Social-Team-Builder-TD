@@ -133,7 +133,25 @@ def notifications_view(request):
 
 def applications_view(request):
     applications = Application.objects.filter(position__project__user=request.user)
-    return render(request, 'projects/applications.html', {'applications': applications})
+    projects = Project.objects.filter(user=request.user)
+    positions = Position.objects.filter(user=request.user).values('name').distinct()
+
+    status_filter = request.GET.get('status_filter')
+    if status_filter:
+        applications = Application.objects.filter(Q(position__project__user=request.user) &
+                                                  Q(status=status_filter))
+
+    project_filter = request.GET.get('project_filter')
+    if project_filter:
+        applications = Application.objects.filter(position__project__pk=project_filter)
+    
+    position_filter = request.GET.get('position_filter')
+    if position_filter:
+        applications = Application.objects.filter(position__project__positions__name=position_filter)
+
+    return render(request, 'projects/applications.html', {'applications': applications,
+                                                          'projects': projects,
+                                                          'positions': positions})
 
 
 def application_status_view(request, application_pk, status):
@@ -177,7 +195,8 @@ def search(request):
     search_term = request.GET.get('search_box', None)
     projects = Project.objects.filter(
         Q(title__icontains=search_term) |
-        Q(description__icontains=search_term)
+        Q(description__icontains=search_term) |
+        Q(positions__name__icontains=search_term)
     )
     return render(request, "projects/index.html", {'projects': projects})
 
