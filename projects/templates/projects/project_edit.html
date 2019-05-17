@@ -31,8 +31,13 @@
             {% for form in formset %}
             <li class="formset">
               {{ form.id }}
+              <span>Position Name:</span>
               {{ form.name }}
+              <span>Lenght of involvement hours/week:</span>
+              {{ form.length }}
+              <span>Position Description:</span>
               {{ form.description }}
+              <span>Needed Skills:</span>
               {% for skill in form.skills %}
                 {{ skill }}
               {% endfor %}

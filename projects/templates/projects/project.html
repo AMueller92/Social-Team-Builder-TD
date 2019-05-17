@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% load course_extras %}
 
 {% block content %}
   <div class="circle--actions--bar">
@@ -21,7 +22,7 @@
       </div>
 
       <div class="circle--article--body">
-        <p>{{ object.description }}</p>
+        <p>{{ object.description|markdown_to_html }}</p>
       </div>
 
       <div class="circle--project--positions">
@@ -33,7 +34,10 @@
           {% for position in positions %}
           <li>
             <h3>{{ position.name }}</h3>
-            <p>{{  position.description }}</p>
+            {% if position.length %}
+            <span>Length of involvement: {{ position.length}} hours/week</span>
+            {% endif %}
+            <p>{{  position.description|markdown_to_html }}</p>
             <h3>Desired Skill:</h3>
             <tbody>
               <td class="circle--cell">

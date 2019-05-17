@@ -38,6 +38,7 @@ class PositionEditForm(forms.ModelForm):
         model = Position
         fields = [
             'name',
+            'length',
             'description',
             'skills',
         ]
@@ -53,6 +54,6 @@ class PositionEditForm(forms.ModelForm):
 
 PositionFormSet = forms.modelformset_factory(Position,
                                              form=PositionEditForm,
-                                             fields=('name', 'description', 'skills'),
+                                             fields=('name', 'length', 'description', 'skills'),
                                              can_delete=True,
                                              min_num=1)

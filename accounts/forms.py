@@ -2,7 +2,7 @@ from django import forms
 from django.forms.widgets import Textarea, TextInput
 from django.contrib.auth.models import User
 
-from .models import Profile, Skill, SelfChoosenSkill
+from .models import Profile, Skill, SelfChoosenSkill, UserProject
 
 
 class UserEditForm(forms.ModelForm):
@@ -44,3 +44,8 @@ SkillFormSet = forms.modelformset_factory(SelfChoosenSkill,
                                           fields=('name',),
                                           extra=1,
                                           min_num=0)
+
+UserProjectFormSet = forms.modelformset_factory(UserProject,
+                                                fields=('title', 'url',),
+                                                extra=1,
+                                                min_num=0)

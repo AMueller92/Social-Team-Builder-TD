@@ -4,8 +4,8 @@
   <div class="circle--actions--bar">
     <nav class="bounds">
       <ul class="circle--pill--list">
-        <li><a href="applications.html">Applications</a></li>
-        <li><a class="selected" href="profile.html">Profile</a></li>
+        <li><a href="{% url 'projects:applications' %}">Applications</a></li>
+        <li><a class="selected" href="{% url 'accounts:profile' %}">Profile</a></li>
       </ul>
     </nav>
   </div>
@@ -31,34 +31,6 @@
           <p>Description:</p>
           {{ profile_form.description }}
         </div>
-
-        <h2>Past Projects</h2>
-        <table class="u-full-width circle--table">
-          <thead>
-            <tr>
-              <th>Project Title</th>
-              <th class="circle--cell--right">Project Needs</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="clickable-row" data-href="project.html">
-              <td>
-                <h3>Invoice Delivery Tool</h3>
-              </td>
-              <td class="circle--cell--right">
-                <span class="secondary-label">Rails Developer</span>
-              </td>
-            </tr>
-            <tr class="clickable-row" data-href="project.html">
-              <td>
-                <h3>Twitter Client</h3>
-              </td>
-              <td class="circle--cell--right">
-                <span class="secondary-label">Designer</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
       <div class="grid-25 grid-push-5">
@@ -85,18 +57,22 @@
             {% endfor %}
           </ul>
         </div>
-
+        <!--
         <div class="circle--secondary--module">
           <h4>My Projects</h4>
           <ul class="circle--clone--list">
-            <li>
-              <input type="text" placeholder="Project Name" />
-              <input type="text" placeholder="Project URL" />
-              <a class="circle--clone--add">Add Project</a>
-              <a class="circle--clone--remove">Remove</a>
+            {{ user_project_formset.management_form }}
+            {% for project in user_project_formset %}
+            <li class="project-formset">
+              {{ project.id }}
+              <span>Title:</span>
+              {{ project.title }}
+              <span>Url:</span>
+              {{ project.url }}
             </li>
+            {% endfor %}
           </ul>
-        </div>
+        </div>-->
       </div>
 
     </div>
@@ -113,4 +89,11 @@
             deleteText: 'Remove'
         });
     </script>
+    <!--
+    <script>
+        $('.project-formset').formset({
+            addText: 'Add project',
+            deleteText: 'Remove'
+        });
+    </script>-->
 {% endblock js %}

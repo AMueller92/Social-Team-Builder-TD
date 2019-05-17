@@ -2,10 +2,12 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import ListView
 
+from braces.views import LoginRequiredMixin
+
 from projects.models import Project, Position
 
 
-class IndexView(ListView):
+class IndexView(LoginRequiredMixin, ListView):
     model = Project
     template_name = "projects/index.html"
     context_object_name = 'projects'

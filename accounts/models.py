@@ -61,14 +61,15 @@ class Profile(Timestampable, models.Model):
 
 class SelfChoosenSkill(models.Model):
     name = models.CharField(max_length=40, blank=True)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='extra_skills')
 
     def __str__(self):
         return self.name
 
 
-class UserProjects(models.Model):
-    title = models.CharField(max_length=50)
+class UserProject(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=90)
     url = models.URLField()
 
     def __str__(self):

@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
     path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('accounts/', include("django.contrib.auth.urls")),
+    path('accounts/', include('allauth.urls')),
     path('projects/', include('projects.urls', namespace='projects')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]

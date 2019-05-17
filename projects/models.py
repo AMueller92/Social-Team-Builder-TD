@@ -42,26 +42,10 @@ class Position(models.Model):
     skills = models.ManyToManyField('accounts.Skill', blank=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     description = models.CharField(max_length=500)
+    length = models.IntegerField()
 
     def __str__(self):
         return self.name
-
-
-class Notification(Timestampable, models.Model):
-    title = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Notification: {self.title}"
-
-
-class UserPositionApplication(models.Model):
-    '''Ensures that a User can only apply to one Position'''
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.ForeignKey(Position, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ['user', 'position']
 
 
 class Application(Timestampable, models.Model):

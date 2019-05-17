@@ -1,16 +1,18 @@
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
+from braces.views import LoginRequiredMixin
 from notifications.signals import notify
 
 from .models import Project, Position, Application
 from .forms import PositionEditForm, ProjectEditForm, PositionFormSet
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/project.html'
 
@@ -24,7 +26,7 @@ class ProjectDetailView(DetailView):
         return context
 
 
-class NewProjectView(CreateView):
+class NewProjectView(LoginRequiredMixin, CreateView):
     model = Project
     form_class = ProjectEditForm
     template_name = 'projects/project_new.html'
@@ -58,7 +60,7 @@ class NewProjectView(CreateView):
         return HttpResponseRedirect(reverse('home'))
 
 
-class EditProjectView(UpdateView):
+class EditProjectView(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectEditForm
     template_name = 'projects/project_edit.html'
@@ -83,7 +85,6 @@ class EditProjectView(UpdateView):
             project.user = self.request.user
             project.save()
             if formset.is_valid():
-                Position.objects.filter(project=project).delete()
                 positions = formset.save(commit=False)
                 for position in positions:
                     position.project = project
@@ -95,11 +96,12 @@ class EditProjectView(UpdateView):
                                     kwargs={"pk": project.pk}))
 
 
-class DeleteProjectView(DeleteView):
+class DeleteProjectView(LoginRequiredMixin, DeleteView):
     model = Project
     success_url = reverse_lazy('home')
 
 
+@login_required
 def position_apply(request, position_pk):
 
     position = Position.objects.get(id=position_pk)
@@ -127,11 +129,13 @@ def position_apply(request, position_pk):
     return HttpResponseRedirect(reverse('home'))
 
 
+@login_required
 def notifications_view(request):
     unread_notifs = request.user.notifications.unread()
     return render(request, 'projects/notifications.html', {'unread_notifs': unread_notifs})
 
 
+@login_required
 def applications_view(request):
     applications = Application.objects.filter(position__project__user=request.user)
     projects = Project.objects.filter(user=request.user)
@@ -155,6 +159,7 @@ def applications_view(request):
                                                           'positions': positions})
 
 
+@login_required
 def application_status_view(request, application_pk, status):
     application = Application.objects.get(id=application_pk)
     position = Position.objects.get(applications__id=application.id)
