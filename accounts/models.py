@@ -1,9 +1,13 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Timestampable(models.Model):
+    '''
+        Abstract Model to give Models where it's used on extra
+        Functionality.
+    '''
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(null=True, blank=True)
 
@@ -21,6 +25,7 @@ class Timestampable(models.Model):
 
 
 class Skill(models.Model):
+    '''Model to set Skills for Users and Projects'''
     PYTHON = 'PY'
     JAVA = 'JV'
     JAVASCRIPT = 'JS'
@@ -41,13 +46,17 @@ class Skill(models.Model):
         (WORDPRESS, 'WordPress'),
         (IOS, 'iOS'),
     )
-    name = models.CharField(max_length=50, choices=SKILL_CHOICES, default="", blank=True)
+    name = models.CharField(max_length=50,
+                            choices=SKILL_CHOICES,
+                            default="",
+                            blank=True)
 
     def __str__(self):
         return self.get_name_display()
 
 
 class Profile(Timestampable, models.Model):
+    '''User Profile Model'''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=True, default='')
     last_name = models.CharField(max_length=50, blank=True, default='')
@@ -60,8 +69,11 @@ class Profile(Timestampable, models.Model):
 
 
 class SelfChoosenSkill(models.Model):
+    '''Additional Skills'''
     name = models.CharField(max_length=40, blank=True)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='extra_skills')
+    profile = models.ForeignKey(Profile,
+                                on_delete=models.CASCADE,
+                                related_name='extra_skills')
 
     def __str__(self):
         return self.name

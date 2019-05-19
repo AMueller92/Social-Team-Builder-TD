@@ -1,19 +1,17 @@
-from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy, reverse
-from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from .models import Profile, Skill, SelfChoosenSkill, UserProject
-from .forms import ProfileEditForm, SkillFormSet, UserProjectFormSet
+from .models import Profile, SelfChoosenSkill, UserProject
+from .forms import ProfileEditForm, SkillFormSet
 from projects.models import Project
 
 
 @login_required
 def user_profile(request):
+    '''Shows the profile of the current user'''
     profile = request.user.profile
     projects = Project.objects.filter(user=request.user)
     attempted_projects = Project.objects.filter(
@@ -21,7 +19,7 @@ def user_profile(request):
             positions__applications__status='P').exclude(
                 positions__applications__status='R')
     user_projects = UserProject.objects.filter(user=request.user)
-    
+
     context = {'object': profile,
                'projects': projects,
                'attempted_projects': attempted_projects,
@@ -32,6 +30,7 @@ def user_profile(request):
 
 @login_required
 def any_user_profile(request, pk):
+    '''Shows the profile of all user except the current user'''
     profile = Profile.objects.get(id=pk)
     projects = Project.objects.filter(user=profile.user)
     attempted_projects = Project.objects.filter(
@@ -50,13 +49,15 @@ def any_user_profile(request, pk):
 
 @login_required
 def edit_profile(request):
+    '''Used to edit User Profiles'''
     profile = request.user.profile
     if request.method == 'POST':
         profile_form = ProfileEditForm(request.POST, request.FILES,
                                        instance=profile)
         formset = SkillFormSet(request.POST,
-                               queryset=SelfChoosenSkill.objects.filter(profile=profile))
-        #user_project_formset = UserProjectFormSet(request.POST,
+                               queryset=SelfChoosenSkill.objects.filter(
+                                   profile=profile))
+        #  user_project_formset = UserProjectFormSet(request.POST,
          #                                         queryset=UserProject.objects.filter(user=request.user))
 
         if profile_form.is_valid():
@@ -80,8 +81,9 @@ def edit_profile(request):
 
     else:
         profile_form = ProfileEditForm(instance=request.user.profile)
-        formset = SkillFormSet(queryset=SelfChoosenSkill.objects.filter(profile=request.user.profile))
-        #user_project_formset = UserProjectFormSet(queryset=UserProject.objects.filter(user=request.user))
+        formset = SkillFormSet(queryset=SelfChoosenSkill.objects.filter(
+            profile=request.user.profile))
+        #  user_project_formset = UserProjectFormSet(queryset=UserProject.objects.filter(user=request.user))
 
     context = {
         'profile_form': profile_form,

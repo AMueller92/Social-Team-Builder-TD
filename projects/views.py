@@ -1,5 +1,6 @@
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
@@ -9,10 +10,11 @@ from braces.views import LoginRequiredMixin
 from notifications.signals import notify
 
 from .models import Project, Position, Application
-from .forms import PositionEditForm, ProjectEditForm, PositionFormSet
+from .forms import ProjectEditForm, PositionFormSet
 
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
+    '''View to show one Project'''
     model = Project
     template_name = 'projects/project.html'
 
@@ -20,13 +22,16 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['positions'] = Position.objects.filter(
             project=context['object']).exclude(applications__status='A')
-        context['applied'] = Position.objects.filter(project=context['object'],
-                                                     applications__applicant=self.request.user)
-        context['applications'] = Application.objects.filter(position__project=context['object'])
+        context['applied'] = Position.objects.filter(
+            project=context['object'],
+            applications__applicant=self.request.user)
+        context['applications'] = Application.objects.filter(
+            position__project=context['object'])
         return context
 
 
 class NewProjectView(LoginRequiredMixin, CreateView):
+    '''View to create a new Project'''
     model = Project
     form_class = ProjectEditForm
     template_name = 'projects/project_new.html'
@@ -37,7 +42,7 @@ class NewProjectView(LoginRequiredMixin, CreateView):
             queryset=Position.objects.none()
         )
         return context
-    
+
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = form_class(self.request.POST)
@@ -57,10 +62,15 @@ class NewProjectView(LoginRequiredMixin, CreateView):
                     position.user = self.request.user
                     position.save()
                 formset.save_m2m()
+                messages.success(
+                    request,
+                    "You successfully created a new Project!"
+                    )
         return HttpResponseRedirect(reverse('home'))
 
 
 class EditProjectView(LoginRequiredMixin, UpdateView):
+    '''View to edit a Project'''
     model = Project
     form_class = ProjectEditForm
     template_name = 'projects/project_edit.html'
@@ -71,7 +81,7 @@ class EditProjectView(LoginRequiredMixin, UpdateView):
             queryset=Position.objects.filter(project=self.get_object())
         )
         return context
-    
+
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = form_class(self.request.POST, instance=self.get_object())
@@ -91,22 +101,28 @@ class EditProjectView(LoginRequiredMixin, UpdateView):
                     position.user = self.request.user
                     position.save()
                 formset.save_m2m()
-            print(formset.errors)
+                messages.success(
+                    request,
+                    "You successfully edited your Project!"
+                    )
         return HttpResponseRedirect(reverse('projects:project_detail',
                                     kwargs={"pk": project.pk}))
 
 
 class DeleteProjectView(LoginRequiredMixin, DeleteView):
+    '''View to delete a Project'''
     model = Project
     success_url = reverse_lazy('home')
 
 
 @login_required
 def position_apply(request, position_pk):
+    '''View to apply for a position and send Notifications'''
 
     position = Position.objects.get(id=position_pk)
     project = position.project
-    application = Application.objects.filter(applicant=request.user, position=position)
+    application = Application.objects.filter(applicant=request.user,
+                                             position=position)
 
     if application.exists():
         return HttpResponseRedirect(reverse('projects:project_detail',
@@ -123,7 +139,8 @@ def position_apply(request, position_pk):
     notify.send(
         request.user,
         recipient=project.user,
-        verb=f"{request.user} applied to the Positon: {position.name} for Project: {project.title}"
+        verb=f"{request.user} applied to the Positon:"
+             f" {position.name} for Project: {project.title}"
     )
 
     return HttpResponseRedirect(reverse('home'))
@@ -131,38 +148,49 @@ def position_apply(request, position_pk):
 
 @login_required
 def notifications_view(request):
+    '''View to provide and render Notifications'''
     unread_notifs = request.user.notifications.unread()
-    return render(request, 'projects/notifications.html', {'unread_notifs': unread_notifs})
+    return render(request,
+                  'projects/notifications.html',
+                  {'unread_notifs': unread_notifs})
 
 
 @login_required
 def applications_view(request):
-    applications = Application.objects.filter(position__project__user=request.user)
+    '''View to render, show and filter Applications for a Project'''
+    applications = Application.objects.filter(
+        position__project__user=request.user)
     projects = Project.objects.filter(user=request.user)
-    positions = Position.objects.filter(user=request.user).values('name').distinct()
+    positions = Position.objects.filter(
+        user=request.user).values('name').distinct()
 
     status_filter = request.GET.get('status_filter')
     if status_filter:
-        applications = Application.objects.filter(Q(position__project__user=request.user) &
-                                                  Q(status=status_filter))
+        applications = Application.objects.filter(
+            Q(position__project__user=request.user) &
+            Q(status=status_filter))
 
     project_filter = request.GET.get('project_filter')
     if project_filter:
-        applications = Application.objects.filter(position__project__pk=project_filter)
-    
+        applications = Application.objects.filter(
+            position__project__pk=project_filter)
+
     position_filter = request.GET.get('position_filter')
     if position_filter:
-        applications = Application.objects.filter(position__project__positions__name=position_filter)
+        applications = Application.objects.filter(
+            position__project__positions__name=position_filter)
 
-    return render(request, 'projects/applications.html', {'applications': applications,
-                                                          'projects': projects,
-                                                          'positions': positions})
+    return render(request,
+                  'projects/applications.html', {'applications': applications,
+                                                 'projects': projects,
+                                                 'positions': positions})
 
 
 @login_required
 def application_status_view(request, application_pk, status):
+    '''View to change Application status and send notifications'''
     application = Application.objects.get(id=application_pk)
-    position = Position.objects.get(applications__id=application.id)
+    #  position = Position.objects.get(applications__id=application.id)
 
     if status == "accepted":
         application.status = "A"
@@ -171,14 +199,16 @@ def application_status_view(request, application_pk, status):
         notify.send(
             request.user,
             recipient=application.applicant,
-            verb=f"You are accepted for the Position: {application.position} of Project: {application.position.project}"
+            verb=f"You are accepted for the Position: {application.position} "
+                 f"of Project: {application.position.project}"
         )
         notify.send(
             request.user,
             recipient=request.user,
-            verb=f"You accepted {application.applicant} for the Position: {application.position}"
+            verb=f"You accepted {application.applicant} "
+                 f"for the Position: {application.position}"
         )
-    
+
     if status == "rejected":
         application.status = "R"
         application.save()
@@ -186,12 +216,14 @@ def application_status_view(request, application_pk, status):
         notify.send(
             request.user,
             recipient=application.applicant,
-            verb=f"You got rejected for the Position: {application.position} of Project: {application.position.project}"
+            verb=f"You got rejected for the Position: {application.position} "
+                 f"of Project: {application.position.project}"
         )
         notify.send(
             request.user,
             recipient=request.user,
-            verb=f"You rejected {application.applicant} for the Position: {application.position}"
+            verb=f"You rejected {application.applicant} "
+                 f"for the Position: {application.position}"
         )
-    
+
     return HttpResponseRedirect(reverse('projects:applications'))

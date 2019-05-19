@@ -1,10 +1,13 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.utils import timezone
 
 
 class Timestampable(models.Model):
+    ''' 
+        Abstract Model to give Models where it's used on extra
+        Functionality.
+    '''
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(null=True, blank=True)
 
@@ -22,7 +25,10 @@ class Timestampable(models.Model):
 
 
 class Project(Timestampable, models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+    '''Project Model'''
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='projects')
     title = models.CharField(max_length=150)
     description = models.CharField(max_length=600)
     duration = models.IntegerField()
@@ -30,6 +36,7 @@ class Project(Timestampable, models.Model):
 
     @property
     def available_positions(self):
+        '''Model property extracting Positions which are available'''
         return self.positions.exclude(applications__status='A')
 
     def __str__(self):
@@ -37,7 +44,10 @@ class Project(Timestampable, models.Model):
 
 
 class Position(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='positions')
+    '''Position Model'''
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name='positions')
     name = models.CharField(max_length=100)
     skills = models.ManyToManyField('accounts.Skill', blank=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -49,14 +59,19 @@ class Position(models.Model):
 
 
 class Application(Timestampable, models.Model):
+    '''Model to handle User Applications for a Position'''
     STATUS_CHOICES = (
         ('P', 'Pending'),
         ('A', 'Accepted'),
         ('R', 'Rejected'),
     )
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    position = models.ForeignKey(Position, on_delete=models.CASCADE, related_name='applications')
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
+    position = models.ForeignKey(Position,
+                                 on_delete=models.CASCADE,
+                                 related_name='applications')
+    status = models.CharField(max_length=1,
+                              choices=STATUS_CHOICES,
+                              default='P')
 
     class Meta:
         ordering = ['-created_at']

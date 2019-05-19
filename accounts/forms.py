@@ -6,13 +6,14 @@ from .models import Profile, Skill, SelfChoosenSkill, UserProject
 
 
 class UserEditForm(forms.ModelForm):
-    
+
     class Meta:
         model = User
         fields = ['username']
 
 
 class ProfileEditForm(forms.ModelForm):
+    '''Form to edit your Profile'''
     skills = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
         queryset=Skill.objects.all()
@@ -29,17 +30,18 @@ class ProfileEditForm(forms.ModelForm):
         ]
         widgets = {
             'description': Textarea(
-            attrs={'class': 'form-control', 'placeholder': 'Enter your description here'}
+                attrs={'placeholder': 'Enter your description here'}
             ),
             'first_name': TextInput(
-            attrs={'class': 'form-control', 'placeholder': 'Enter your first name here'}
+                attrs={'placeholder': 'Enter your first name here'}
             ),
             'last_name': TextInput(
-            attrs={'class': 'form-control', 'placeholder': 'Enter your last name here'}
+                attrs={'placeholder': 'Enter your last name here'}
             ),
         }
 
 
+#  Inline Formset to add mulitple Skills within one form submission
 SkillFormSet = forms.modelformset_factory(SelfChoosenSkill,
                                           fields=('name',),
                                           extra=1,

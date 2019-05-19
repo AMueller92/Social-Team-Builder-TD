@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 
+{% block title %}New Project{% endblock %}
+
 {% block content %}
   <form action="{% url 'projects:new_project' %}" method="POST">
     {% csrf_token %}

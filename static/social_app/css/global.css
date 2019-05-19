@@ -2110,3 +2110,8 @@ input[type="email"].circle--input--h6, input[type="number"].circle--input--h6, i
   text-align: center;
   padding-top: 100px;
 }
+
+.messages {
+  text-align: center;
+  color: whitesmoke;
+}

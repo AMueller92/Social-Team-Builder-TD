@@ -7,7 +7,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Circle</title>
+  <title>Projectify | {% block title %}{% endblock %}</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -71,7 +71,7 @@
         <ul class="messages centered grid-50">
             {% for message in messages %}
                 <li{% if message.tags %}
-                    class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    class="{{ message.tags }} messages"{% endif %}>{{ message }}</li>
             {% endfor %}
         </ul>
       {% endif %}

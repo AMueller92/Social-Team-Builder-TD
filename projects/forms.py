@@ -6,7 +6,7 @@ from .models import Project, Position
 
 
 class ProjectEditForm(forms.ModelForm):
-
+    '''Form to edit Projects'''
     class Meta:
         model = Project
         fields = [
@@ -17,18 +17,19 @@ class ProjectEditForm(forms.ModelForm):
         ]
         widgets = {
             'title': TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Enter a project title'}
+                attrs={'placeholder': 'Enter a project title'}
             ),
             'description': Textarea(
-                attrs={'class': 'form-control', 'placeholder': 'Enter a project description'}
+                attrs={'placeholder': 'Enter a project description'}
             ),
             'requirements': Textarea(
-                attrs={'class': 'form-control', 'placeholder': 'Enter project requirements'}
+                attrs={'placeholder': 'Enter project requirements'}
             ),
         }
 
 
 class PositionEditForm(forms.ModelForm):
+    '''Form to edit a Position'''
     skills = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
         queryset=Skill.objects.all()
@@ -44,16 +45,20 @@ class PositionEditForm(forms.ModelForm):
         ]
         widgets = {
             'name': TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Enter a position title'}
+                attrs={'placeholder': 'Enter a position title'}
             ),
             'description': Textarea(
-                attrs={'class': 'form-control', 'placeholder': 'Enter a description'}
+                attrs={'placeholder': 'Enter a description'}
             ),
         }
 
 
+#  Inline Formset to add multiple Positions in one Form
 PositionFormSet = forms.modelformset_factory(Position,
                                              form=PositionEditForm,
-                                             fields=('name', 'length', 'description', 'skills'),
+                                             fields=('name',
+                                                     'length',
+                                                     'description',
+                                                     'skills'),
                                              can_delete=True,
                                              min_num=1)
