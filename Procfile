@@ -1,1 +1,1 @@
-web: gunicorn team_builder.wsgi.application --preload --workers 1
+web: gunicorn team_builder.wsgi
