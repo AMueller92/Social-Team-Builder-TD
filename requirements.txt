@@ -3,8 +3,10 @@ botocore==1.12.157
 certifi==2019.3.9
 chardet==3.0.4
 defusedxml==0.6.0
+dj-database-url==0.5.0
 django-allauth==0.39.1
 django-braces==1.13.0
+django-heroku==0.3.1
 django-model-utils==3.1.2
 django-notifications-hq==1.5.0
 django-storages==1.7.1
@@ -17,6 +19,7 @@ jsonfield==2.0.2
 markdown2==2.3.7
 oauthlib==3.0.1
 pillow==6.0.0
+psycopg2==2.8.2
 python-dateutil==2.8.0 ; python_version >= '2.7'
 python3-openid==3.1.0
 pytz==2019.1
