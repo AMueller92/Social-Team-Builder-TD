@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['socialteambuilder.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'team_builder.accounts.apps.AccountsConfig',
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

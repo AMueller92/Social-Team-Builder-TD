@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+
+[packages]
+django = "*"
+pillow = "*"
+django-braces = "*"
+django-notifications-hq = "*"
+django-allauth = "*"
+markdown2 = "*"
+boto3 = "*"
+django-storages = "*"
+gunicorn = "*"
+whitenoise = "*"
+
+[requires]
+python_version = "3.7"
