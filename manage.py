@@ -5,6 +5,7 @@ import sys
 
 
 def main():
+    print("Here it is!!!!")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'team_builder.settings')
     try:
         from django.core.management import execute_from_command_line
