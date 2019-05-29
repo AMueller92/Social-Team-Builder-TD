@@ -1,1 +1,0 @@
-web: gunicorn team_builder.wsgi
