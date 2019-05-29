@@ -20,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4$*z)@@v_f!!ztgt*vi99r8cl8h$9#w6shzchx)r93x$l&h(-x'
+# SECRET_KEY = '4$*z)@@v_f!!ztgt*vi99r8cl8h$9#w6shzchx)r93x$l&h(-x'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['socialteambuilder.herokuapp.com']
 
 
 # Application definition
@@ -159,8 +160,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-
-print({AWS_ACCESS_KEY_ID}, {AWS_SECRET_ACCESS_KEY})
 
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
